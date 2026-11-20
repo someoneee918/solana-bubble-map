@@ -5,6 +5,7 @@ import { spawn } from "node:child_process";
 import { c, footer, isAddress, main, pad, parseArgs, short, table } from "../lib/core.js";
 import { buildClusters, fetchHolders, sharedBusyFunders, summarize, traceFunders } from "../lib/holders.js";
 import { renderHtml } from "../lib/render.js";
+import { holderCell } from "../lib/format.js";
 
 const HELP = `solana-bubble-map: holder bubble map for any Solana token
 
@@ -62,7 +63,7 @@ main(async () => {
     [{ title: "#", width: 3, right: true }, { title: "Holder", width: 24 }, { title: "Share", width: 7, right: true }, { title: "Group", width: 8 }, { title: "Funded by", width: 30 }],
     data.holders.map((h) => [
       h.rank,
-      h.label || short(h.owner, 5) + (h.insider ? " *" : ""),
+      holderCell(h),
       h.pct.toFixed(2) + "%",
       h.kind === "AMM" ? c.dim("pool") : h.cluster ? c.yellow("group " + h.cluster) : "",
       h.funder ? short(h.funder, 5) + (busy.has(h.funder) ? c.dim(" (busy)") : "") : c.dim(h.funderNote || ""),
